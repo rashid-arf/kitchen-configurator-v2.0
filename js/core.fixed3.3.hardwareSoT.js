@@ -506,7 +506,7 @@ function updateHeaderTexts(){
         stepLead.textContent  = "Оберіть рівень користування. Деталі/бренди — вже на етапі точного прорахунку.";
     }else if(state.step === 8){
         kicker.textContent = "Підсумок";
-        stepTitle.textContent = "Підсумок конфігурації";
+        stepTitle.textContent = "Оцінка бюджета";
         stepLead.textContent  = "Ви зібрали кухню під свої задачі. Залиште контакт — ми підготуємо точний прорахунок і варіанти.";
     }
 
