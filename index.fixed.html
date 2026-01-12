@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+
+<html data-theme="dark" lang="uk">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Kitchen Configurator v1 — (Мінімально достатній продукт)  (Steps 1–8)</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="client-mode">
+<div class="wrap" id="app">
+<header>
+<div class="brand">
+<div class="logo"></div>
+<div>
+<h1>Kitchen Configurator</h1>
+<div class="sub">Мінімально достатній продукт</div>
+</div>
+</div>
+<div class="hdr-actions">
+<div class="pill">Крок <b id="stepNow">1</b> з <b>8</b></div>
+<button class="btn ghost" id="saveBtn" title="Зберегти стан у браузері">💾 Зберегти</button>
+<button class="btn" id="themeBtn" title="Перемкнути тему">🌓 Тема</button>
+</div>
+</header>
+<div class="grid">
+<!-- LEFT -->
+<div class="panel">
+<div class="inner">
+<div class="kicker" id="kicker">Починаємо з образу</div>
+<div class="title" id="stepTitle">Якою ви уявляєте свою кухню?</div>
+<p class="lead" id="stepLead">Оберіть стиль — це вплине на матеріали та бюджет.</p>
+<!-- STEP 1 -->
+<section class="step active" data-step="1">
+<div class="cards" id="styleCards">
+<div class="card" data-style="modern">
+<div class="thumb style-modern"></div>
+<div class="card-title">Сучасна</div>
+<div class="card-sub">Чіткі лінії, практичність, сучасні фактури.</div>
+<div class="tags"><span class="tag">рівні фасади</span><span class="tag">контраст</span><span class="tag">практично</span></div>
+</div>
+<div class="card" data-style="minimal">
+<div class="thumb style-minimal"></div>
+<div class="card-title">Мінімал</div>
+<div class="card-sub">Нічого зайвого. Легко прибирати. Спокійні кольори.</div>
+<div class="tags"><span class="tag">мінімум деталей</span><span class="tag">чистий вигляд</span><span class="tag">легко</span></div>
+</div>
+<div class="card" data-style="classic">
+<div class="thumb style-classic"></div>
+<div class="card-title">Класика</div>
+<div class="card-sub">Затишок, теплі тони, м’які форми і відчуття дому.</div>
+<div class="tags"><span class="tag">затишок</span><span class="tag">теплі кольори</span><span class="tag">традиційно</span></div>
+</div>
+<div class="card" data-style="loft">
+<div class="thumb style-loft"></div>
+<div class="card-title">Лофт</div>
+<div class="card-sub">Фактури, темні акценти, метал і контраст.</div>
+<div class="tags"><span class="tag">темні акценти</span><span class="tag">фактура</span><span class="tag">контраст</span></div>
+</div>
+</div>
+
+      <!-- STYLE PREVIEW (sales): visual example that updates when you pick a style -->
+      <div class="style-preview" id="stylePreview" data-style="modern" aria-live="polite">
+        <div class="style-preview__hero" id="stylePreviewHero" role="img" aria-label="Візуальний приклад стилю">
+          <!-- Нейтральний плейсхолдер. Заміниш на свої фото: /assets/style-modern.jpg тощо -->
+          <img src="images/1.jpg" id="stylePreviewImg" alt="Style preview" loading="eager" fetchpriority="high" decoding="async" class="style-preview-img"/>
+        </div>
+        <div class="style-preview__meta">
+          <div class="kicker">Візуальний приклад</div>
+          <div class="style-preview__title" id="stylePreviewTitle">Сучасна</div>
+          <div class="style-preview__text" id="stylePreviewText">
+            Чіткі лінії, практичні матеріали, нейтральні фактури. Добре підходить для більшості планувань.
+          </div>
+          <div class="style-preview__chips" id="stylePreviewChips">
+            <span class="chip">рівні фасади</span>
+            <span class="chip">контраст</span>
+            <span class="chip">практично</span>
+          </div>
+          <div class="style-preview__mini">
+            <div class="mini" data-mini="front" title="Фасади"></div>
+            <div class="mini" data-mini="top" title="Стільниця"></div>
+            <div class="mini" data-mini="wall" title="Фартух"></div>
+          </div>
+          <div class="style-preview__note">
+            Порада: цей блок — “мова образів”. Він знімає сумніви і пришвидшує рішення на кроці 1.
+          </div>
+        </div>
+      </div>
+
+      <div class="toast">Порада: якщо не впевнені — оберіть <b>“Мінімал”</b>. Це найуніверсальніший стиль.</div>
+</section>
+<!-- STEP 2 -->
+<section class="step" data-step="2">
+<div class="cards" id="layoutCards">
+<div class="card" data-layout="straight">
+<div class="layoutPic"><img class="layout-img" data-layout-img="straight" alt="Пряма схема"></div>
+<div class="card-title">Пряма</div>
+<div class="card-sub">Усі шафи на одній стіні. Найпростіший сценарій.</div>
+<div class="tags"><span class="tag">швидко</span><span class="tag">просто</span><span class="tag">вузькі простори</span></div>
+</div>
+<div class="card" data-layout="corner">
+<div class="layoutPic"><img class="layout-img" data-layout-img="corner" alt="Кутова схема"></div>
+<div class="card-title">Кутова</div>
+<div class="card-sub">Дві стіни + кут. Більше зберігання і поверхні.</div>
+<div class="tags"><span class="tag">популярно</span><span class="tag">зручно</span><span class="tag">більше місця</span></div>
+</div>
+<div class="card" data-layout="u">
+<div class="layoutPic"><img class="layout-img" data-layout-img="u" alt="П‑подібна схема"></div>
+<div class="card-title">П‑подібна</div>
+<div class="card-sub">Максимум робочої зони. Для великих кухонь.</div>
+<div class="tags"><span class="tag">простір</span><span class="tag">функціонально</span><span class="tag">зберігання</span></div>
+</div>
+<div class="card" data-layout="island">
+<div class="layoutPic"><img class="layout-img" data-layout-img="island" alt="З островом схема"></div>
+<div class="card-title">З островом</div>
+<div class="card-sub">Острів як зона готування/бар. Вау‑ефект.</div>
+<div class="tags"><span class="tag">вау</span><span class="tag">бар</span><span class="tag">сценарії</span></div>
+</div>
+</div>
+<div class="toast">Якщо сумніваєтесь — оберіть <b>“Пряма”</b> або <b>“Кутова”</b>.</div>
+</section>
+<!-- STEP 3 -->
+<section class="step" data-step="3">
+
+<div class="fields">
+
+<div class="field">
+
+<label>Довжина A (мм)</label>
+
+<input class="input" id="dimA" min="800" step="10" type="number"/>
+
+<div class="tiny" style="margin-top:8px">Це попередня оцінка — точність не критична.</div>
+
+</div>
+<div class="field" id="dimBWrap" style="display:none">
+
+<label>Довжина B (мм)</label>
+
+<input class="input" id="dimB" min="800" step="10" type="number"/>
+
+
+    <div class="tiny" style="margin-top:8px">Для кутової/П‑подібної компоновки.</div>
+
+</div>
+
+    <div class="field" id="islandWrap" style="margin-top:12px;display:none">
+        <label>Острів: довжина (мм)</label>
+        <input class="input" id="islandLen" min="1200" step="10" type="number" placeholder="Напр.. 1800"/>
+
+        <div class="tiny" style="margin-top:10px">Мінімум ~1200 мм. Острів рахуємо як окрему зону.</div>
+
+        <div style="height:10px"></div>
+
+        <label>Острів: глибина (мм)</label>
+        <input class="input" id="islandDepth" min="600" step="10" type="number" placeholder="Напр. 900"/>
+
+        <div class="tiny" style="margin-top:10px"> (Мінімально достатній продукт): впливає на модулі острова.</div>
+    </div>
+
+
+</div>
+<div class="field" id="cornerWrap" style="margin-top:12px;display:none">
+<label>Тип кута</label>
+<div class="inline">
+<label class="radio"><input checked="" name="corner" type="radio" value="900"/> 900 мм</label>
+<label class="radio"><input name="corner" type="radio" value="1000"/> 1000 мм</label>
+</div>
+<div class="tiny" style="margin-top:8px">Впливає на кутовий модуль і корисну довжину.</div>
+</div>
+<div class="toast">Порада: для більшості кухонь довжина стіни <b>2400–4200 мм</b>. Якщо значення сильно відрізняється — уточнимо на етапі прорахунку.</div>
+</section>
+<!-- STEP 4 -->
+<section class="step" data-step="4">
+<div class="cards" id="techCards">
+<div class="card" data-tech="fridge"><div class="thumb tech"></div><div class="card-title">🧊 Холодильник‑колона</div><div class="card-sub">Вбудований / повна висота. Впливає на колону та модулі.</div><div class="tags"><span class="tag">зберігання</span><span class="tag">вертикаль</span></div></div>
+<div class="card" data-tech="dishwasher"><div class="thumb tech"></div><div class="card-title">🍽️ Посудомийна</div><div class="card-sub">45, 60 або 80 см. Впливає на ширину одного модуля.</div><div class="tags"><span class="tag">комфорт</span><span class="tag">щодня</span></div></div>
+<div class="card" data-tech="oven"><div class="thumb tech"></div><div class="card-title">🔥 Духовка</div><div class="card-sub">Вбудована. Часто комбінується з варильною.</div><div class="tags"><span class="tag">вбудована</span><span class="tag">ергономіка</span></div></div>
+<div class="card" data-tech="hob"><div class="thumb tech"></div><div class="card-title">♨️ Варильна</div><div class="card-sub">Потрібен модуль під плиту + вентиляція.</div><div class="tags"><span class="tag">плита</span><span class="tag">вентиляція</span></div></div>
+<div class="card" data-tech="hood"><div class="thumb tech"></div><div class="card-title">💨 Витяжка</div><div class="card-sub">Впливає на верхні шафи і фартух.</div><div class="tags"><span class="tag">верх</span><span class="tag">повітря</span></div></div>
+<div class="card" data-tech="sink"><div class="thumb tech"></div><div class="card-title">🚰 Мийка</div><div class="card-sub">Потрібен модуль під мийку + комунікації.</div><div class="tags"><span class="tag">вода</span><span class="tag">сифон</span></div></div>
+</div>
+<div class="field" id="dwOptions" style="margin-top:12px;display:none">
+<label>Посудомийна: ширина</label>
+<div class="inline">
+<label class="radio"><input checked="" name="dw" type="radio" value="450"/> 45 см</label>
+<label class="radio"><input name="dw" type="radio" value="600"/> 60 см</label>
+    <label class="radio"><input name="dw" type="radio" value="800"/> 80 см</label>
+</div>
+<div class="tiny" style="margin-top:8px">Ми використаємо це для підбору модулів.</div>
+    <div id="dwHint" class="hint" style="display:none;margin-top:10px;">
+        ⚠️ Для ПММ 800 мм рекомендована довжина стіни від 2400 мм.
+    </div>
+</div>
+
+    <div class="toast">Можна залишити цей крок без вибору — тоді ми підберемо базову компоновку.</div>
+</section>
+<!-- STEP 5: PACKAGES -->
+<section class="step" data-step="5">
+<div class="cards" id="packageCards">
+<div class="card" data-pack="economy"><div class="thumb pack-e"></div><div class="card-title">Економ</div><div class="card-sub">Оптимально по бюджету. База: ДСП фасади / прості рішення.</div><div class="tags"><span class="tag">ціна</span><span class="tag">практично</span><span class="tag">швидко</span></div></div>
+<div class="card" data-pack="standard"><div class="thumb pack-s"></div><div class="card-title">Стандарт</div><div class="card-sub">Збалансовано: кращі фасади + фурнітура “під комфорт”.</div><div class="tags"><span class="tag">комфорт</span><span class="tag">популярно</span><span class="tag">надійно</span></div></div>
+<div class="card" data-pack="premium"><div class="thumb pack-p"></div><div class="card-title">Преміум</div><div class="card-sub">Максимум враження: фарб. МДФ / скло+профіль / топ фурнітура.</div><div class="tags"><span class="tag">вау</span><span class="tag">тиша</span><span class="tag">довговічно</span></div></div>
+</div>
+<div class="split">
+<div class="boxline">
+<div class="kicker">Що входить</div>
+<div class="title" style="font-size:16px;margin:8px 0 8px">Авто-набір (можна змінити)</div>
+<div class="note" id="packAuto">Оберіть пакет — ми покажемо, що саме підхопиться по фасадах / фурнітурі / стільниці / LED.</div>
+</div>
+<div class="boxline">
+<div class="kicker">Навіщо це</div>
+<div class="note">
+                  Пакети спрощують вибір: клієнт бачить зрозумілий рівень “Економ/Стандарт/Преміум”, а менеджер отримує логіку матеріалів і комплектів.
+                  <div class="note" style="margin-top:8px"><b>Далі (крок 6):</b> фасади + LED + ручки.</div>
+</div>
+</div>
+</div>
+<div class="toast">Важливо: це <b>не фінальний прорахунок</b>. Це — швидкий сценарій для першої консультації.</div>
+</section>
+<!-- STEP 6: FACADES + LED + HANDLES -->
+<section class="step" data-step="6">
+<div class="kicker">Фасади</div>
+<div class="cards" id="facadeCards" style="margin-top:8px">
+<div class="card" data-facade="dsp">
+<div class="thumb fac-dsp"></div>
+<div class="card-title">ДСП фасади</div>
+<div class="card-sub">Найпрактичніше по бюджету. Великий вибір декорів.</div>
+<div class="tags"><span class="tag">економ</span><span class="tag">швидко</span><span class="tag">практично</span></div>
+</div>
+<div class="card" data-facade="mdf">
+<div class="thumb fac-mdf"></div>
+<div class="card-title">Фарбований МДФ</div>
+<div class="card-sub">Рівна геометрія, преміальний вигляд, будь-який колір.</div>
+<div class="tags"><span class="tag">стандарт+</span><span class="tag">колір</span><span class="tag">вау</span></div>
+</div>
+<div class="card" data-facade="glass">
+<div class="thumb fac-glassprofile"></div>
+<div class="card-title">Скло + профіль (Комбінація)</div>
+<div class="card-sub">Низ — ДСП/МДФ, верх — скло. Найпопулярніший “баланс”.</div>
+<div class="tags"><span class="tag">преміум</span><span class="tag">вітрина</span><span class="tag">світло</span></div>
+</div>
+    <label class="opt-row" style="display:flex;gap:10px;align-items:center;margin-top:10px;">
+        <input type="checkbox" id="hasAntresolToggle">
+        <span>Антресолі (+10% до послуг)</span>
+    </label>
+</div>
+<div class="hr"></div>
+<div class="section-row">
+<div>
+<div class="kicker">LED</div>
+<div class="muted">Можна вимкнути — це не обов’язково</div>
+</div>
+<button class="btn ghost" id="resetStep6Btn" title="Повернути авто-набір пакету" type="button">↩︎ Авто (з пакету)</button>
+</div>
+<div class="cards" id="ledCards" style="margin-top:10px">
+<div class="card" data-led="none">
+<div class="thumb led-none"></div>
+<div class="card-title">Без підсвітки</div>
+<div class="card-sub">Базовий варіант. Можна додати пізніше.</div>
+<div class="tags"><span class="tag">0 грн</span><span class="tag">просто</span></div>
+</div>
+<div class="card" data-led="under">
+<div class="thumb led-under"></div>
+<div class="card-title">Під верхніми шафами</div>
+<div class="card-sub">Світло на стільницю. Найпрактичніший сценарій.</div>
+<div class="tags"><span class="tag">комфорт</span><span class="tag">робоча зона</span></div>
+</div>
+<div class="card" data-led="profile">
+<div class="thumb led-profile"></div>
+<div class="card-title">У профілі / вітринах</div>
+<div class="card-sub">Для скляних фасадів та полиць. Вау‑ефект.</div>
+<div class="tags"><span class="tag">вау</span><span class="tag">вітрини</span></div>
+</div>
+<div class="card" data-led="smart">
+<div class="thumb led-scenes"></div>
+<div class="card-title">Сценарії світла</div>
+<div class="card-sub">Димування / датчики / “нічний режим”.</div>
+<div class="tags"><span class="tag">преміум</span><span class="tag">сценарії</span></div>
+</div>
+</div>
+<div class="hr"></div>
+<div class="kicker">Ручки / відкривання</div>
+<div class="cards" id="handleCards" style="margin-top:8px">
+<div class="card" data-handle="standard">
+<div class="thumb h-over"></div>
+<div class="card-title">Накладні ручки</div>
+<div class="card-sub">Класичний варіант. Дешевше та надійно.</div>
+<div class="tags"><span class="tag">економ</span><span class="tag">надійно</span></div>
+</div>
+<div class="card" data-handle="profile">
+<div class="thumb h-profile"></div>
+<div class="card-title">Профіль‑ручка</div>
+<div class="card-sub">Сучасно. Менше “візуального шуму”.</div>
+<div class="tags"><span class="tag">мінімал</span><span class="tag">сучасно</span></div>
+</div>
+<div class="card" data-handle="gola">
+<div class="thumb h-gola"></div>
+<div class="card-title">Без ручок (Gola)</div>
+<div class="card-sub">Чистий фасад. Дорожче, але вигляд — топ.</div>
+<div class="tags"><span class="tag">преміум</span><span class="tag">чисто</span></div>
+</div>
+<div class="card" data-handle="push">
+<div class="thumb h-push"></div>
+<div class="card-title">Tip‑On / Push</div>
+<div class="card-sub">Натиснув — відкрив. Потрібні правильні петлі/напрямні.</div>
+<div class="tags"><span class="tag">мінімал</span><span class="tag">механіка</span></div>
+</div>
+</div>
+<!--<div class="toast">На кроці 6 ми “підкручуємо” зовнішній вигляд. Далі (крок 7) — комфорт: фурнітура/комплекти.</div>-->
+</section>
+<!-- STEP 7: COMFORT -->
+<section class="step" data-step="7">
+<!--<div class="kicker">Комфорт</div>-->
+<!--<div class="title">Комфорт: фурнітура та комплекти</div>-->
+<!--<p class="lead">Оберіть готовий комплект — це найпростіший спосіб швидко визначити бюджет і відчуття користування.</p>-->
+<div class="cards" id="comfortCards">
+<div class="card" data-comfort="econom">
+              <div class="thumb comfort-econom"></div>
+<div class="card-title">Економ</div>
+<div class="card-sub">Базові петлі / напрямні. Надійно, без доводчиків.</div>
+<div class="tags"><span class="tag">бюджет</span><span class="tag">просто</span></div>
+</div>
+<div class="card" data-comfort="standard">
+              <div class="thumb comfort-standard"></div>
+<div class="card-title">Стандарт</div>
+<div class="card-sub">Доводчики + кращі напрямні. Найпопулярніший баланс.</div>
+<div class="tags"><span class="tag">комфорт</span><span class="tag">популярно</span></div>
+</div>
+<div class="card" data-comfort="premium">
+              <div class="thumb comfort-premium"></div>
+<div class="card-title">Преміум</div>
+<div class="card-sub">BLUM / Hettich (або аналог). Максимальна тиша та ресурс.</div>
+<div class="tags"><span class="tag">топ</span><span class="tag">довговічно</span></div>
+</div>
+<div class="card subtle">
+<div class="card-title">Що це дає?</div>
+<div class="card-desc">
+                  • Відчуття відкривання / закривання<br/>
+                  • Термін служби й гарантії<br/>
+                  • Ціна (другий за впливом фактор після фасадів)
+                </div>
+<div class="muted" style="margin-top:10px">Порада: якщо сумніваєтесь — обирайте <b>Стандарт</b>.</div>
+</div>
+</div>
+<!--<div class="toast">Тут ми не показуємо бренди/ціни/артикули — лише рівень користування.</div>-->
+</section>
+<!-- STEP 8: SUMMARY + LEAD -->
+<section class="step" data-step="8">
+<!--<div class="kicker">Фініш</div>-->
+<!--<div class="title">Підсумок конфігурації</div>-->
+<!--<p class="lead">Ви зібрали кухню під свої задачі. Залиште контакт — ми підготуємо точний прорахунок і варіанти.</p>-->
+<div class="split">
+<div class="boxline" id="calcBlock">
+<div class="title">Оцінка бюджету (Мінімально достатній продукт)</div>
+<div class="tiny">Клієнт бачить укрупнено. Менеджер може уточнити пресети та перерахувати.</div>
+<div class="fields" style="grid-template-columns: 1fr 1fr; margin-top:10px;">
+<button class="input" id="calcModeClientBtn" style="cursor:pointer;" type="button" onclick="setCalcMode('client')">👤 Клієнт</button>
+<button class="input" id="calcModeManagerBtn" style="cursor:pointer; opacity:.7;" type="button" onclick="setCalcMode('manager')">🧑‍💼 Менеджер</button>
+</div>
+<div id="calcClientView" style="margin-top:12px;">
+<div id="calcClientTable"></div>
+<div class="hr" style="margin:10px 0;"></div>
+<div class="field">
+<div class="tiny">Разом</div>
+<div id="calcGrandTotal" style="font-weight:800; font-size:18px;">—</div>
+</div>
+</div>
+<div id="calcManagerView" style="margin-top:12px; display:none;">
+<div class="tiny">Пресети (можна змінити вручну)</div>
+<div class="fields" style="grid-template-columns: 1fr 1fr;">
+<div class="field">
+<label class="tiny">Ціна корпусу (грн/лист 2800×2070)</label>
+<input class="input" id="mCorpSheetPrice" step="1" type="number"/>
+</div>
+<div class="field">
+<label class="tiny">Відходи корпусу</label>
+<input class="input" id="mCorpWaste" step="0.01" type="number"/>
+</div>
+<div class="field">
+<label class="tiny">Ціна фасаду (грн/м²)</label>
+<input class="input" id="mFacadeM2Price" step="1" type="number"/>
+</div>
+<div class="field">
+<label class="tiny">Відходи фасаду</label>
+<input class="input" id="mFacadeWaste" step="0.01" type="number"/>
+</div>
+<div class="field">
+<label class="tiny">Задня стінка — ціна (грн/лист 2800×2070)</label>
+<input class="input" id="mBackSheetPrice" step="1" type="number"/>
+</div>
+<div class="field">
+<label class="tiny">Відходи задньої стінки</label>
+<input class="input" id="mBackWaste" step="0.01" type="number"/>
+</div>
+<div class="field">
+          <div class="hr"></div>
+          <div class="subhead">Стільниця та фартух ( (Мінімально достатній продукт))</div>
+          <div class="field">
+            <label class="tiny"><input type="checkbox" id="mTopOn" checked> Стільниця увімкнена</label>
+          </div>
+          <div class="field">
+            <label class="tiny">Ціна стільниці (грн/м.п.)</label>
+            <input class="input" id="mTopPerM" step="1" type="number"/>
+          </div>
+          <div class="field">
+            <label class="tiny">Глибина стільниці (мм)</label>
+            <input class="input" id="mTopDepth" step="1" type="number"/>
+          </div>
+          <div class="field">
+            <label class="tiny"><input type="checkbox" id="mBspOn" checked> Фартух увімкнений</label>
+          </div>
+          <div class="field">
+            <label class="tiny">Ціна фартуха (грн/м²)</label>
+            <input class="input" id="mBspPerM2" step="1" type="number"/>
+          </div>
+          <div class="field">
+            <label class="tiny">Висота фартуха (мм)</label>
+            <input class="input" id="mBspH" step="1" type="number"/>
+          </div>
+<label class="tiny">Фурнітура (% від матеріалів)</label>
+<input class="input" id="mHardwarePct" step="0.01" type="number"/>
+</div>
+<div class="field">
+<label class="tiny">Послуги (% від матеріалів)</label>
+<input class="input" id="mServicesPct" step="0.01" type="number"/>
+</div>
+</div>
+<div class="fields" style="grid-template-columns: 1fr;">
+
+
+    <button class="input" id="recalcBtn" style="cursor:pointer;" type="button">🔁 Перерахувати</button>
+    <button id="exportCsvBtn" class="btn" type="button">CSV</button>
+</div>
+<div class="hr" style="margin:12px 0;"></div>
+<div class="tiny">Специфікація  (Мінімально достатній продукт</div>
+<div class="field" style="margin-top:10px;">
+  <label class="tiny" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+    <input type="checkbox" id="mgrDetailsToggle" style="width:16px;height:16px;accent-color:var(--accent);" />
+    <span>Деталізація (корпус / фасади / задня стінка)</span>
+  </label>
+</div>
+<div id="calcManagerTable" style="margin-top:8px;"></div>
+</div>
+</div>
+
+<div class="boxline">
+<div class="kicker">Ваш вибір</div>
+<div class="note">Перевірте Preview справа. Якщо потрібно — поверніться назад і змініть крок.</div>
+<!--<div class="hr"></div>-->
+<!--<div class="note"><b>Після підтвердження</b> ми підключимо калькулятор: корпус / фасади / фурнітура / LED / стільниця / фартух.</div>-->
+</div>
+<div class="boxline">
+<div class="kicker">Контакт</div>
+<div class="fields" style="margin-top:10px">
+<div class="field">
+<label>Імʼя</label>
+<input class="input" id="leadName" placeholder="Ваше імʼя" type="text">
+</input></div>
+<div class="field">
+<label>Телефон *</label>
+<input class="input" id="leadPhone" placeholder="+38 (0__) ___-__-__" type="tel">
+<div class="tiny" style="margin-top:8px">Мінімум 10 цифр.</div>
+</input></div>
+</div>
+<div class="field" style="margin-top:12px">
+<label>Коментар (опційно)</label>
+<textarea class="input" id="leadComment" placeholder="Напр.: квартира, терміни, місто, побажання..." rows="3"></textarea>
+</div>
+<div class="toast">Кнопка <b>📩 Отримати прорахунок</b> стане активною, коли введено телефон.</div>
+</div>
+</div>
+</section>
+<div class="progress-row">
+<div class="tiny">Ваші дані зберігаються локально у браузері (на цьому комп’ютері).</div>
+<div class="bar"><div id="progressFill"></div></div>
+</div>
+</div>
+<div class="nav">
+<button class="btn" disabled="" id="backBtn">← Назад</button>
+<div class="tiny" id="navHint">Стиль → Планування → Розміри → Техніка → Пакет → Фасади → Комфорт → Контакт</div>
+<button class="btn primary" disabled="" id="nextBtn">Далі →</button>
+</div>
+</div>
+<!-- RIGHT -->
+<aside class="panel">
+<div class="inner preview">
+<div class="box">
+<div class="kicker">Preview</div>
+<div class="title" style="font-size:18px;margin:8px 0 6px">Ваш вибір</div>
+<div class="summary">
+<div class="kv"><div class="k">Стиль</div><div class="v" id="pvStyle">—</div></div>
+<div class="kv"><div class="k">Планування</div><div class="v" id="pvLayout">—</div></div>
+<div class="kv"><div class="k">Розміри</div><div class="v" id="pvDims">—</div></div>
+<div class="kv"><div class="k">Техніка</div><div class="v" id="pvTech">—</div></div>
+<div class="kv"><div class="k">Пакет</div><div class="v" id="pvPack">—</div></div>
+<div class="kv"><div class="k">Фасади</div><div class="v" id="pvFacade">—</div></div>
+<div class="kv"><div class="k">LED</div><div class="v" id="pvLed">—</div></div>
+<div class="kv"><div class="k">Ручки</div><div class="v" id="pvHandle">—</div></div>
+<div class="kv"><div class="k">Комфорт</div><div class="v" id="pvComfort">—</div></div>
+<div class="kv"><div class="k">Стан</div><div class="v" id="pvReady">Оберіть стиль</div></div>
+</div>
+<ul class="list" id="techChips" style="display:none"></ul>
+
+</div>
+<div class="box">
+<div class="kicker">Схема</div>
+<div class="title" style="font-size:18px;margin:8px 0 10px">План зверху</div>
+<div class="mini-scheme" id="scheme"></div>
+<div class="tiny" id="schemeText" style="margin-top:10px">Виберіть планування — схема з’явиться тут.</div>
+</div>
+
+</div>
+</aside>
+</div>
+</div>
+
+
+
+
+
+
+<script src="js/kc.state.bus2.0.js"></script>           <!-- state bus (must be before step scripts) -->
+<script src="js/core.fixed3.3.hardwareSoT.js"></script>
+
+<script src="js/step1.js"></script>
+<script src="js/step2.fixed2.js"></script>
+<script src="js/step3.fixed4.js"></script>
+
+<script src="js/step4.modules.engine.fixed7.0.js"></script> <!-- step4: rules/engine -->
+<script src="js/step4.modules.ui.fixed7.0.js"></script>      <!-- step4: UI panel -->
+
+<script src="js/app.js"></script>
+<script src="js/step5.fixed.js"></script>
+<script src="js/step6.1.fixed.js"></script>
+<script src="js/step7.fixed.js"></script>
+<script src="js/step8.fixed7.4.hardwareCoef.final6.6.facade3Prices.calcKitchenOnly.js"></script>
+
+
+</body>
+</html>
