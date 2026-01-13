@@ -55,7 +55,7 @@
     }
 
     async function sendToTelegramKC() {
-        // 1) перевірка що ми реально на Step 8
+        // 1) перевірка, що ми реально на Step 8
         if (getActiveStep() !== 8) return;
 
         // 2) контакт
@@ -64,64 +64,44 @@
         const phoneRaw  = cleanText(document.getElementById("leadPhone")?.value);
         const comment   = cleanText(document.getElementById("leadComment")?.value);
 
+        // Витягуємо тільки цифри з телефону
         const phoneDigits = digitsOnly(phoneRaw);
+
+        // Тут перевірка не буде показувати alert на перехід між кроками.
+        // Лише після натискання на кнопку
         if (phoneDigits.length < 10) {
             alert("Введіть коректний номер телефону (мінімум 10 цифр).");
             return;
         }
 
-        // 3) режим
-        const mode = isManagerMode() ? "менеджер" : "клієнт";
+        // Якщо все добре, формуємо текст та відправляємо
+        const payload = {
+            secret: TELEGRAM_FORM_SECRET,
+            text: `
+        📨 Нова заявка: Kitchen Configurator
+        ${firstName} ${lastName}
+        📞 Телефон: ${phoneRaw}
+        Коментар: ${comment || "—"}
+        `
+        };
 
-        // 4) state (якщо є)
-        let stateLine = "";
-        try {
-            const st = localStorage.getItem("KC_STATE");
-            if (st) {
-                const obj = JSON.parse(st);
-                const layout = obj?.layout ? `Планування: ${obj.layout}` : "";
-                const dims = obj?.dims ? `Розміри: A=${obj.dims.A || "—"} B=${obj.dims.B || "—"} island=${obj.dims.island ? "так" : "ні"}` : "";
-                stateLine = [layout, dims].filter(Boolean).join("\n");
-            }
-        } catch (_) {}
-
-        // 5) підсумок / таблиця
-        const totalGuess = guessTotalFromTables();
-        const table = isManagerMode()
-            ? document.getElementById("calcManagerTable")
-            : document.getElementById("calcClientTable");
-
-        const csvLines = tableToCsvLines(table);
-
-        // 6) формуємо повідомлення
-        let text = "";
-        text += `🧾 Нова заявка: Kitchen Configurator\n\n`;
-        text += `👤 ${firstName || "—"} ${lastName || ""}\n`;
-        text += `📞 ${phoneRaw || "—"}\n\n`;
-        if (comment) text += `💬 Коментар: ${comment}\n\n`;
-        text += `🔁 Режим: *${mode}*\n\n`;
-        if (stateLine) text += `${stateLine}\n\n`;
-        text += `💰 Орієнтовно: *${totalGuess}*\n\n`;
-
-        text += "```\n";
-        // заголовок умовний
-        text += "Дані з таблиці Step 8:\n";
-        for (const line of csvLines) text += line + "\n";
-        text += "```";
-
-        const payload = { secret: TELEGRAM_FORM_SECRET, text };
-
+        // Надсилаємо дані через fetch
         const res = await fetch(TELEGRAM_API_URL, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
-            const t = await res.text().catch(() => "");
-            throw new Error("Telegram error: " + res.status + " " + t);
+            const errorText = await res.text();
+            alert("Помилка відправки в Telegram: " + errorText);
+        } else {
+            alert("Заявка успішно відправлена в Telegram!");
         }
     }
+
 
     // Хук на кнопку "Отримати прорахунок" (у тебе це nextBtn на Step 8)
     // щоб не ламати інші кроки — працює ТІЛЬКИ коли активний step=8

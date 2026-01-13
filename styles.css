@@ -531,10 +531,22 @@ body.manager-mode .split{grid-template-columns:1fr}
     }
 }
 
-/* Скрываем таблицу для кнопки "Менеджер", когда режим не активен */
+/*!* Скрываем таблицу для кнопки "Менеджер", когда режим не активен *!*/
+/*#calcManagerView {*/
+/*    display: none; !* Скрываем по умолчанию *!*/
+/*}*/
+
+/* Step8 views toggle */
+#calcClientView,
 #calcManagerView {
-    display: none; /* Скрываем по умолчанию */
+    display: none;
 }
+
+#calcClientView.is-active,
+#calcManagerView.is-active {
+    display: block;
+}
+
 
 #calcModeManagerBtn.active ~ #calcManagerView {
     display: block; /* Показываем, если активен режим менеджера */
@@ -563,3 +575,70 @@ body.manager-mode .split{grid-template-columns:1fr}
     }
 }
 
+/* ===========================
+   STEP 8 — Mobile fixes (<560px)
+   =========================== */
+
+/* 1) Глобально для Step8: прибрати “2 колонки” на малих екранах
+   (перебиває inline grid-template-columns) */
+@media (max-width: 560px) {
+    section.step[data-step="8"] .fields {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+}
+
+/* 2) Перемикач “Клієнт / Менеджер” — в одну колонку на дуже малих */
+@media (max-width: 560px) {
+    section.step[data-step="8"] #calcBlock .fields,
+    section.step[data-step="8"] #calcBlock .fields > * {
+        width: 100%;
+    }
+    section.step[data-step="8"] #calcModeClientBtn,
+    section.step[data-step="8"] #calcModeManagerBtn {
+        width: 100%;
+    }
+}
+
+/* 3) Контакт: поля “Ім’я / Телефон” + textarea — 1 колонка */
+@media (max-width: 560px) {
+    section.step[data-step="8"] input,
+    section.step[data-step="8"] textarea {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* 4) Нижній блок з кнопками (Назад + шлях + Отримати прорахунок) */
+@media (max-width: 560px) {
+    section.step[data-step="8"] .nav {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+
+    section.step[data-step="8"] .nav .btn,
+    section.step[data-step="8"] .nav button {
+        width: 100% !important;
+    }
+
+    /* шлях/підказка між кнопками — переносити рядки */
+    section.step[data-step="8"] .nav .tiny,
+    section.step[data-step="8"] .nav .crumbs,
+    section.step[data-step="8"] .nav .breadcrumbs {
+        width: 100% !important;
+        white-space: normal !important;
+        line-height: 1.3 !important;
+    }
+}
+
+/* 5) Таблиці/спеки на мобільному: не “розпирають” екран */
+@media (max-width: 560px) {
+    section.step[data-step="8"] table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
