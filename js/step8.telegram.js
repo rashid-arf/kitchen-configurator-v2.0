@@ -96,14 +96,15 @@
         text += `\n🔁 Режим: ${modeLine}\n`;
         text += `\n💰 Орієнтовно: *${totalLine}*\n\n`;
 
-        text += "Дані з таблиці Step 8:\n";
-        text += "```\n";
-        if (lines.length) {
-            text += lines.join("\n");
-        } else {
-            text += "(таблиця не знайдена або порожня)\n";
-        }
-        text += "\n```";
+        // text += "Дані з таблиці Step 8:\n";
+        // text += "```\n";
+        // if (lines.length) {
+        //     text += lines.join("\n");
+        // }
+        // // else {
+        // //     text += "(таблиця не знайдена або порожня)\n";
+        // // }
+        // text += "\n```";
 
         const payload = { secret: TELEGRAM_FORM_SECRET, text };
 
