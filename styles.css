@@ -220,7 +220,7 @@
     .chip small{color:var(--muted);font-weight:700}
 
     .split{display:grid;gap:12px;margin-top:12px}
-body.client-mode .split{grid-template-columns:1fr 1fr}
+/*body.client-mode .split{grid-template-columns:1fr 1fr}*/
 body.manager-mode .split{grid-template-columns:1fr}
     .manager-mode .split {
         grid-template-columns: 1fr;
