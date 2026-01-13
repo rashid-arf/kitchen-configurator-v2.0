@@ -537,10 +537,10 @@ body.manager-mode .split{grid-template-columns:1fr}
 /*}*/
 
 /* Step8 views toggle */
-#calcClientView,
-#calcManagerView {
-    display: none;
-}
+/*#calcClientView,*/
+/*#calcManagerView {*/
+/*    display: none;*/
+/*}*/
 
 #calcClientView.is-active,
 #calcManagerView.is-active {
