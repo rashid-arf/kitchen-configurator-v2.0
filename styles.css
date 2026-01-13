@@ -639,3 +639,8 @@ body.manager-mode .split{grid-template-columns:1fr}
         -webkit-overflow-scrolling: touch;
     }
 }
+
+#calcManagerView { display: none; }
+#calcClientView { display: block; }
+body[data-calc-mode="manager"] #calcManagerView { display: block; }
+body[data-calc-mode="manager"] #calcClientView { display: none; }
