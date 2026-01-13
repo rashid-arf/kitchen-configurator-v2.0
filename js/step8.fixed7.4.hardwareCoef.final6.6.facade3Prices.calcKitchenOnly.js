@@ -813,22 +813,30 @@
         const clientBtn = $("#calcModeClientBtn");
         const mgrBtn = $("#calcModeManagerBtn");
 
+        // 1) body class (для layout)
         if (mode === "manager") {
             document.body.classList.add("manager-mode");
             document.body.classList.remove("client-mode");
-            if (vMgr) vMgr.style.display = "";
-            if (vClient) vClient.style.display = "none";
-            if (mgrBtn) mgrBtn.style.opacity = "1";
-            if (clientBtn) clientBtn.style.opacity = ".7";
         } else {
             document.body.classList.add("client-mode");
             document.body.classList.remove("manager-mode");
-            if (vClient) vClient.style.display = "";
-            if (vMgr) vMgr.style.display = "none";
-            if (clientBtn) clientBtn.style.opacity = "1";
-            if (mgrBtn) mgrBtn.style.opacity = ".7";
+        }
+
+        // 2) Views via class (без style.display)
+        if (vClient) vClient.classList.toggle("is-active", mode !== "manager");
+        if (vMgr) vMgr.classList.toggle("is-active", mode === "manager");
+
+        // 3) Buttons UI
+        if (clientBtn) {
+            clientBtn.classList.toggle("active", mode !== "manager");
+            clientBtn.style.opacity = (mode !== "manager") ? "1" : ".7";
+        }
+        if (mgrBtn) {
+            mgrBtn.classList.toggle("active", mode === "manager");
+            mgrBtn.style.opacity = (mode === "manager") ? "1" : ".7";
         }
     }
+
 
     // ===== OVERRIDES =====
     function readManagerInputs() {

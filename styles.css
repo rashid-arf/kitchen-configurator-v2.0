@@ -548,9 +548,6 @@ body.manager-mode .split{grid-template-columns:1fr}
 }
 
 
-#calcModeManagerBtn.active ~ #calcManagerView {
-    display: block; /* Показываем, если активен режим менеджера */
-}
 
 #calcModeClientBtn.active ~ #calcClientView {
     display: block; /* Показываем, если активен режим клиента */
