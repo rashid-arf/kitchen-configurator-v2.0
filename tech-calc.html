@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="uk" data-theme="dark">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>KC — Технічний калькулятор (MVP)</title>
+  <style>
+    :root{
+      --bg:#0b0f17; --card:#121a28; --text:#e8eefc; --muted:#9bb0d0;
+      --accent:#67e8f9; --bad:#fb7185; --ok:#34d399; --line:rgba(255,255,255,.10);
+    }
+    [data-theme="light"]{ --bg:#f6f7fb; --card:#ffffff; --text:#0f172a; --muted:#475569; --line:rgba(2,6,23,.10); }
+    body{ margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); }
+    .wrap{ max-width:1180px; margin:0 auto; padding:20px; }
+    .top{ display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    h1{ font-size:18px; margin:0; letter-spacing:.2px; }
+    .btns{ display:flex; gap:10px; flex-wrap:wrap; }
+    .btn{ background:var(--card); border:1px solid var(--line); color:var(--text); padding:10px 12px; border-radius:12px; cursor:pointer; font-weight:700; }
+    .btn:hover{ border-color:rgba(103,232,249,.55); }
+    .grid{ display:grid; grid-template-columns: 1.2fr .8fr; gap:14px; }
+    .card{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:14px; }
+    .meta{ display:flex; gap:8px; flex-wrap:wrap; }
+    .pill{ border:1px solid var(--line); background:rgba(255,255,255,.03); padding:6px 10px; border-radius:999px; font-size:12px; }
+    .muted{ color:var(--muted); font-size:12px; }
+    .ok{ color:var(--ok); font-weight:800; }
+    .bad{ color:var(--bad); font-weight:800; }
+    table{ width:100%; border-collapse:collapse; font-size:13px; }
+    th,td{ padding:10px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+    th{ text-align:left; font-size:12px; color:var(--muted); font-weight:800; }
+    td.num{ text-align:right; font-variant-numeric: tabular-nums; }
+    pre{ margin:0; white-space:pre-wrap; word-break:break-word; font-size:12px; color:var(--muted); }
+    @media (max-width: 980px){ .grid{ grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <h1>KC — Технічний калькулятор (Manager) · MVP v1</h1>
+      <div class="btns">
+        <button class="btn" id="btnBack">← Назад у KC</button>
+        <button class="btn" id="btnCsv">⬇️ CSV (деталі)</button>
+        <button class="btn" id="btnClear">🗑️ Очистити payload</button>
+        <button id="exportCsvBtn" class="btn">
+          ⬇️ CSV (Production)
+        </button>
+
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:14px;">
+      <div id="status" class="muted">Завантаження…</div>
+      <div class="meta" id="meta" style="margin-top:10px;"></div>
+      <div class="muted" style="margin-top:10px;">
+        Примітка: це MVP. Кромка рахується по фронтальних торцях. Свердління/фурнітура — за doorCount/drawerCount (якщо передані).
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div style="display:flex; align-items:flex-end; justify-content:space-between; gap:10px;">
+          <div>
+            <div style="font-weight:900;">Деталізація (деталі / кромка / операції)</div>
+            <div class="muted">Підготовка під виробництво + CSV для 1С (через імпорт).</div>
+          </div>
+        </div>
+
+        <div style="margin-top:10px; overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Група</th>
+                <th>Код</th>
+                <th>Найменування</th>
+                <th class="num">L, мм</th>
+                <th class="num">W, мм</th>
+                <th class="num">К-сть</th>
+                <th>Примітка</th>
+              </tr>
+            </thead>
+            <tbody id="partsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:900; margin-bottom:6px;">Raw payload (handoff)</div>
+        <pre id="rawJson">—</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/tech-calc.js"></script>
+</body>
+</html>

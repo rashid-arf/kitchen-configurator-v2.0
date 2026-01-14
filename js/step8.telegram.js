@@ -130,9 +130,9 @@
         e.preventDefault();
         e.stopPropagation();
 
-        sendToTelegramKC({ force: true })
-            .then(() => alert("Заявку надіслано ✅"))
-            .catch((err) => alert(err.message || String(err)));
+        // sendToTelegramKC({ force: true })
+        //     .then(() => alert("Заявку надіслано ✅"))
+        //     .catch((err) => alert(err.message || String(err)));
     });
 
     // 2) Якщо у тебе є окрема кнопка sendToTelegramBtn — теж підтримуємо

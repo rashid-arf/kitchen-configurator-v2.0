@@ -1,0 +1,337 @@
+// =======================
+// KC TECH CALC — MVP v1 (Manager)
+// Reads payload from localStorage (KC_TECH_HANDOFF_V1)
+// Generates parts + edging + drilling (rough) + exports CSV
+// =======================
+(function () {
+  "use strict";
+
+  const HANDOFF_KEY = "KC_TECH_HANDOFF_V1";
+
+  const $ = (s, r=document) => r.querySelector(s);
+  const num = (v, d=0) => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : d;
+  };
+
+  const DEFAULTS = {
+    baseH: 830, upperH: 720, tallH: 2300,
+    baseD: 560, upperD: 320, tallD: 560,
+    tCorp: 18, tBack: 4
+  };
+
+  function roleBucket(m) {
+    const role = String(m?.role || "").toLowerCase();
+    const name = String(m?.name || "").toLowerCase();
+    if (role.includes("upper") || role.includes("wall") || name.includes("верх")) return "upper";
+    if (role.includes("tall") || role.includes("column") || role.includes("fridge") || name.includes("колон") || name.includes("холод")) return "tall";
+    return "base";
+  }
+
+  function ensureDims(m) {
+    const b = roleBucket(m);
+    const W = num(m.width, 0);
+    let H = num(m.height, 0);
+    let D = num(m.depth, 0);
+    if (!H) H = (b==="upper") ? DEFAULTS.upperH : (b==="tall") ? DEFAULTS.tallH : DEFAULTS.baseH;
+    if (!D) D = (b==="upper") ? DEFAULTS.upperD : (b==="tall") ? DEFAULTS.tallD : DEFAULTS.baseD;
+    return { W, H, D, bucket: b };
+  }
+
+  function loadPayload() {
+    try {
+      const raw = localStorage.getItem(HANDOFF_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) { return null; }
+  }
+
+  function mmToM(v){ return num(v,0)/1000; }
+
+  function partRow(group, code, name, L, W, qty, note="") {
+    return { group, code, name, L: Math.round(L), W: Math.round(W), qty: num(qty,0), note };
+  }
+
+  function edgeRow(code, name, m, qty, note="") {
+    return { group: "Кромка", code, name, L: m, W: "", qty: qty, note };
+  }
+
+  function opRow(code, name, qty, note="") {
+    return { group: "Операції", code, name, L:"", W:"", qty, note };
+  }
+
+  function buildParts(payload) {
+    const modules = payload?.modules || [];
+    const rows = [];
+
+    let edgeM = 0;
+    let hingeCups = 0;
+    let hinges = 0;
+    let drawerBoxes = 0;
+
+    modules.forEach((m, idx) => {
+      const {W,H,D,bucket} = ensureDims(m);
+      if (!W || !H || !D) return;
+
+      const tag = `M${idx+1}:${bucket}:${W}×${H}×${D}`;
+
+      // корпус: 2 боки
+      rows.push(partRow("Корпус ДСП 18", "SIDE", "Боковина", H, D, 2, tag));
+      // дно + кришка
+      rows.push(partRow("Корпус ДСП 18", "TB", "Дно/Кришка", W, D, 2, tag));
+
+      // полиці
+      const sh = num(m.shelvesCount, 0);
+      if (sh > 0) rows.push(partRow("Корпус ДСП 18", "SHELF", "Полиця", W, D, sh, tag));
+
+      // задня стінка (HDF 4) — як листова деталь
+      rows.push(partRow("Задня стінка HDF 4", "BACK", "Задня стінка", W, H, 1, tag));
+
+      // кромка: фронтальні торці (MVP)
+      // боковини: по фронту = H, 2 шт
+      edgeM += 2 * mmToM(H);
+      // дно/кришка: по фронту = W, 2 шт
+      edgeM += 2 * mmToM(W);
+      // полиці: фронт = W, sh шт
+      edgeM += sh * mmToM(W);
+
+      // фурнітура: якщо є явні counts — беремо їх
+      const dc = num(m.doorCount, 0);
+      const drc = num(m.drawerCount, 0);
+      if (dc > 0) {
+        // 2 петлі на дверку (MVP)
+        hinges += dc * 2;
+        hingeCups += dc * 2;
+      }
+      if (drc > 0) drawerBoxes += drc;
+    });
+
+    // add edging summary row
+    if (edgeM > 0) rows.push(edgeRow("EDGE-1", "Кромка ПВХ (фронтальні торці)", edgeM.toFixed(2), 1, "MVP: по фронту деталей"));
+
+    // ops (MVP)
+    if (hingeCups > 0) rows.push(opRow("DRILL-HINGE", "Свердління під чашку петлі", hingeCups, "MVP: 1 чашка = 1 операція"));
+    if (hinges > 0) rows.push(opRow("INSTALL-HINGE", "Петля (комплект)", hinges, "MVP: 2 петлі на дверку"));
+    if (drawerBoxes > 0) rows.push(opRow("DRAWER", "Шухляда (комплект)", drawerBoxes, "по door/drawerCount з модулів"));
+
+    return rows;
+  }
+
+  function render(payload, rows) {
+    const meta = $("#meta");
+    const modCount = (payload?.modules || []).length;
+    const layout = payload?.layout || "—";
+    const pkg = payload?.selections?.hardwarePackage || "—";
+    const tier = payload?.selections?.materialTier || "—";
+    const ant = payload?.selections?.hasAntresol ? "так" : "ні";
+
+    meta.innerHTML = `
+      <div class="pill">Модулів: <b>${modCount}</b></div>
+      <div class="pill">Layout: <b>${layout}</b></div>
+      <div class="pill">Hardware: <b>${pkg}</b></div>
+      <div class="pill">Матеріали: <b>${tier}</b></div>
+      <div class="pill">Антресолі: <b>${ant}</b></div>
+    `;
+
+    const tbody = $("#partsBody");
+    tbody.innerHTML = rows.map(r => `
+      <tr>
+        <td>${r.group||""}</td>
+        <td>${r.code||""}</td>
+        <td>${r.name||""}</td>
+        <td class="num">${r.L!==""?r.L:""}</td>
+        <td class="num">${r.W!==""?r.W:""}</td>
+        <td class="num">${r.qty||0}</td>
+        <td class="muted">${r.note||""}</td>
+      </tr>
+    `).join("");
+
+    $("#rawJson").textContent = JSON.stringify(payload, null, 2);
+  }
+
+  function rowsToCsv(rows) {
+    const head = ["Група","Код","Найменування","Довжина,мм","Ширина,мм","К-сть","Примітка"];
+    const lines = [head.join(";")];
+    rows.forEach(r => {
+      const row = [
+        String(r.group||""),
+        String(r.code||""),
+        String(r.name||""),
+        String(r.L??""),
+        String(r.W??""),
+        String(r.qty??""),
+        String((r.note||"").replace(/\s+/g," ").trim())
+      ];
+      lines.push(row.map(x => x.replaceAll(";", ",")).join(";"));
+    });
+    return lines.join("\n");
+  }
+
+  function download(name, text, mime="text/plain") {
+    const blob = new Blob([text], { type: mime + ";charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  }
+
+  function init() {
+    const payload = loadPayload();
+    if (!payload) {
+      $("#status").innerHTML = `<span class="bad">Немає payload у localStorage (${HANDOFF_KEY}). Повернись у KC Step 8 → "Перейти в технічний калькулятор".</span>`;
+      return;
+    }
+    $("#status").innerHTML = `<span class="ok">Payload завантажено ✅</span>`;
+
+    const rows = buildParts(payload);
+    render(payload, rows);
+
+    $("#btnCsv").addEventListener("click", () => {
+      const csv = rowsToCsv(rows);
+      download("KC_TECH_parts.csv", csv, "text/csv");
+    });
+
+    $("#btnBack").addEventListener("click", () => {
+      window.location.href = "index.with-tech.html#step8";
+    });
+
+    $("#btnClear").addEventListener("click", () => {
+      localStorage.removeItem(HANDOFF_KEY);
+      alert("Payload очищено. Перезавантаж сторінку або передай з KC ще раз.");
+    });
+  }
+
+  // =======================
+// CSV EXPORT — Production v1
+// =======================
+
+  function csvEscape(v) {
+    if (v === null || v === undefined) return "";
+    const s = String(v).replace(/"/g, '""');
+    return `"${s}"`;
+  }
+
+  function toCsv(rows) {
+    return rows.map(r => r.map(csvEscape).join(";")).join("\n");
+  }
+
+  function moduleKey(m) {
+    const id = m?.id || m?.code || "";
+    const role = (m?.role || "").toLowerCase();
+    return `${id}:${role}`;
+  }
+
+// ===== BUILD CSV DATA =====
+  function buildProductionCsv(payload) {
+    const rows = [];
+
+    // HEADER
+    rows.push([
+      "Group","Code","Name","Material",
+      "L_mm","W_mm","T_mm",
+      "Unit","Qty","Module","Note"
+    ]);
+
+    const { details=[], edges=[], operations=[], facades=[] } = payload;
+
+    // DETAILS
+    details.forEach(d => {
+      rows.push([
+        "DETAILS",
+        d.code,
+        d.name,
+        d.material,
+        d.L_mm,
+        d.W_mm,
+        d.T_mm,
+        "шт",
+        d.qty,
+        d.module,
+        d.note || ""
+      ]);
+    });
+
+    // EDGES
+    edges.forEach(e => {
+      rows.push([
+        "EDGES",
+        e.code,                 // EDGE-FRONT
+        e.name,                 // Кромка фронт
+        e.material || "ПВХ",
+        e.L_mm,
+        "", "",
+        "м.п.",
+        e.qty,
+        e.module,
+        e.note || ""
+      ]);
+    });
+
+    // OPERATIONS
+    operations.forEach(o => {
+      rows.push([
+        "OPERATIONS",
+        o.code,
+        o.name,
+        "",
+        "", "", "",
+        o.unit,
+        o.qty,
+        o.module,
+        o.note || ""
+      ]);
+    });
+
+    // FACADES (TECH)
+    facades.forEach(f => {
+      rows.push([
+        "FACADES",
+        f.code,
+        f.name,
+        f.material,
+        f.L_mm,
+        f.H_mm,
+        f.T_mm,
+        "шт",
+        f.qty,
+        f.module,
+        f.note || ""
+      ]);
+    });
+
+    return toCsv(rows);
+  }
+
+// ===== DOWNLOAD =====
+  function downloadCsv(filename, content) {
+    const blob = new Blob([content], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+// ===== WIRE BUTTON =====
+  document.getElementById("exportCsvBtn")?.addEventListener("click", () => {
+    // ⬇️ ВАЖЛИВО:
+    // getTechPayload() — твоя існуюча функція,
+    // яка повертає { details, edges, operations, facades }
+    const payload = getTechPayload();
+
+    const csv = buildProductionCsv(payload);
+    downloadCsv("KC_TECH_PRODUCTION_v1.csv", csv);
+  });
+
+
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
+})();
